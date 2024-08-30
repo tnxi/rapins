@@ -3,25 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
+    <title>Encrypt and Redirect</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script>
-        // تابع برای رمزگذاری Base64
-        function encodeBase64(input) {
-            return btoa(input);
-        }
+        // کلید رمزنگاری (این کلید باید در هر دو صفحه یکسان باشد)
+        const secretKey = "your-secret-key-here";
 
-        // تابع برای رمزگشایی Base64
-        function decodeBase64(input) {
-            return atob(input);
-        }
+        // آدرس مقصد
+        const urlToEncrypt = "https://sendrope.github.io/sirup/name.html";
 
-        // آدرس رمزگذاری شده پیج دوم
-        const encryptedUrl = "aHR0cHM6Ly9hbGlrcmF0b3MyOS5naXRodWIuaW8vcmVzcGluL25hbWUuaHRtbA==";
+        // رمزگذاری با AES-256
+        const encryptedUrl = CryptoJS.AES.encrypt(urlToEncrypt, secretKey).toString();
 
-        // انتقال کاربر به پیج دوم
+        // انتقال کاربر به پیج دوم با پارامتر رمزگذاری شده
         window.onload = function() {
-            const redirectUrl = decodeBase64(encryptedUrl);
-            window.location.href = redirectUrl;
+            window.location.href = `https://sendrope.github.io/sirup/name.html?data=${encodeURIComponent(encryptedUrl)}`;
         };
     </script>
 </head>
