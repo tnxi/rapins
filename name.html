@@ -1,72 +1,37 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>در حال بارگذاری...</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-image: url("https://imoviee.com/load-screen-2.webp");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+<script>
+    // ثبت Service Worker و اطمینان از کش شدن منابع قبل از ریدایرکت
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+            
+            // باز کردن و کش کردن منابع
+            caches.open('offline-cache-v1').then(function(cache) {
+                return cache.addAll([
+                    '/offline-page.html', // صفحه آفلاین
+                    '/wifi.png',          // آیکون قطع اینترنت
+                    'https://fonts.googleapis.com/css?family=Roboto' // فونت ضروری
+                ]);
+            }).then(function() {
+                console.log('Resources cached successfully.');
 
-        .loader {
-            border: 8px solid #f3f3f3; /* رنگ سفید */
-            border-top: 8px solid #e74c3c; /* رنگ قرمز */
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body>
-    <div class="loader"></div>
-    
-    <script>
-        // ثبت Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
-                console.log('Service Worker registered with scope:', registration.scope);
-                
-                // کش کردن منابع
-                caches.open('offline-cache-v1').then(function(cache) {
-                    return cache.addAll([
-                        '/offline-page.html', // صفحه آفلاین
-                        '/css/style.css', // فایل CSS
-                        '/images/offline-icon.png', // آیکون قطع اینترنت
-                        'https://fonts.googleapis.com/css?family=Roboto' // فونت ضروری
-                    ]);
-                }).then(function() {
-                    console.log('Resources cached successfully. Redirecting to main site.');
-                    // ریدایرکت به سایت اصلی
-                    window.location.href = 'https://imoviee.com';
-                }).catch(function() {
-                    // اگر کش نشود، صفحه سفید نمایش داده می‌شود
-                    document.body.innerHTML = '<h1>خطا: نمی‌توان صفحه را کش کرد.</h1>';
+                // اطمینان از این‌که منابع کش شده‌اند
+                caches.match('/offline-page.html').then(function(response) {
+                    if (response) {
+                        // اگر منابع کش شدند، ریدایرکت انجام می‌شود
+                        window.location.href = 'https://imoviee.com';
+                    } else {
+                        document.body.innerHTML = '<h1>خطا: صفحه آفلاین کش نشد. لطفاً دوباره تلاش کنید.</h1>';
+                    }
                 });
             }).catch(function(error) {
-                console.log('Service Worker registration failed:', error);
-                // اگر Service Worker ثبت نشود، صفحه سفید نمایش داده می‌شود
-                document.body.innerHTML = '<h1>خطا: نمی‌توان به سایت منتقل شد.</h1>';
+                document.body.innerHTML = '<h1>خطا در کش کردن منابع.</h1>';
+                console.error(error);
             });
-        } else {
-            // اگر مرورگر Service Worker را پشتیبانی نمی‌کند، صفحه سفید نمایش داده می‌شود
-            document.body.innerHTML = '<h1>خطا: مرورگر شما از این قابلیت پشتیبانی نمی‌کند.</h1>';
-        }
-    </script>
-</body>
-</html>
+        }).catch(function(error) {
+            document.body.innerHTML = '<h1>خطا: ثبت Service Worker شکست خورد.</h1>';
+            console.error(error);
+        });
+    } else {
+        document.body.innerHTML = '<h1>مرورگر شما از Service Worker پشتیبانی نمی‌کند.</h1>';
+    }
+</script>
