@@ -40,8 +40,8 @@
         // کش کردن صفحه آفلاین قبل از ریدایرکت
         caches.open('offline-cache-v1').then(function(cache) {
             return cache.addAll([
-                '/offline-page.html', // صفحه آفلاین
-                '/wifi.png',          // آیکون قطع اینترنت
+                'https://imoviee.com/offline-page.html', // صفحه آفلاین
+                'https://imoviee.com/wifi.png',          // آیکون قطع اینترنت
                 'https://fonts.googleapis.com/css?family=Roboto' // فونت ضروری
             ]);
         }).then(function() {
