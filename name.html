@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=https://imoviee.com">
     <title>در حال بارگذاری...</title>
     <style>
         body {
@@ -35,22 +36,5 @@
 </head>
 <body>
     <div class="loader"></div>
-    
-    <script>
-        // کش کردن صفحه آفلاین قبل از ریدایرکت
-        caches.open('offline-cache-v1').then(function(cache) {
-            return cache.addAll([
-                'https://imoviee.com/offline-page.html', // صفحه آفلاین
-                'https://imoviee.com/wifi.png',          // آیکون قطع اینترنت
-                'https://fonts.googleapis.com/css?family=Roboto' // فونت ضروری
-            ]);
-        }).then(function() {
-            console.log('Offline page cached successfully.');
-            // بعد از کش شدن صفحه آفلاین، ریدایرکت به سایت اصلی
-            window.location.href = 'https://imoviee.com';
-        }).catch(function() {
-            document.body.innerHTML = '<h1>خطا در کش کردن صفحه آفلاین.</h1>';
-        });
-    </script>
 </body>
 </html>
