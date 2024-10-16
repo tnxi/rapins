@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0;url=https://imoviee.com">
     <title>در حال بارگذاری...</title>
     <style>
         body {
@@ -36,5 +35,38 @@
 </head>
 <body>
     <div class="loader"></div>
+    
+    <script>
+        // ثبت Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+                
+                // کش کردن منابع
+                caches.open('offline-cache-v1').then(function(cache) {
+                    return cache.addAll([
+                        '/offline-page.html', // صفحه آفلاین
+                        '/css/style.css', // فایل CSS
+                        '/images/offline-icon.png', // آیکون قطع اینترنت
+                        'https://fonts.googleapis.com/css?family=Roboto' // فونت ضروری
+                    ]);
+                }).then(function() {
+                    console.log('Resources cached successfully. Redirecting to main site.');
+                    // ریدایرکت به سایت اصلی
+                    window.location.href = 'https://imoviee.com';
+                }).catch(function() {
+                    // اگر کش نشود، صفحه سفید نمایش داده می‌شود
+                    document.body.innerHTML = '<h1>خطا: نمی‌توان صفحه را کش کرد.</h1>';
+                });
+            }).catch(function(error) {
+                console.log('Service Worker registration failed:', error);
+                // اگر Service Worker ثبت نشود، صفحه سفید نمایش داده می‌شود
+                document.body.innerHTML = '<h1>خطا: نمی‌توان به سایت منتقل شد.</h1>';
+            });
+        } else {
+            // اگر مرورگر Service Worker را پشتیبانی نمی‌کند، صفحه سفید نمایش داده می‌شود
+            document.body.innerHTML = '<h1>خطا: مرورگر شما از این قابلیت پشتیبانی نمی‌کند.</h1>';
+        }
+    </script>
 </body>
 </html>
