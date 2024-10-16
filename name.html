@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0;url=https://imoviee.com">
     <title>در حال بارگذاری...</title>
     <style>
         body {
@@ -36,5 +35,12 @@
 </head>
 <body>
     <div class="loader"></div>
+    
+    <script>
+        // ریدایرکت به سایت اصلی پس از 2 ثانیه
+        setTimeout(function() {
+            window.location.href = 'https://imoviee.com';
+        }, 2000);  // می‌توانید زمان تأخیر را به دلخواه تنظیم کنید
+    </script>
 </body>
 </html>
